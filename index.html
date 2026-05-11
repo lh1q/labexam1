@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BKK Urban Analysis Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <div class="sidebar-header mb-3">
+            <h5 class="fw-bold"><i class="fas fa-city text-primary me-2"></i>Web-based GIS for Urban Well-being and Public Service Accessibility Analysis in Bangkok</h5>
+            <p class="text-muted small">รระบบภูมิสารสนเทศบนเว็บเพื่อวิเคราะห์สุขภาวะคนเมืองและการเข้าถึงบริการสาธารณะในเขตกรุงเทพมหานคร</p>
+        </div>
+
+        <div class="summary-box p-3 rounded-3 text-white mb-4">
+            <div class="small opacity-75 text-uppercase fw-bold" style="font-size: 10px;">ยอดรวมจุดสนใจในระบบ</div>
+            <div class="h2 mb-0 fw-bold" id="total-points">0</div>
+            <div class="small mt-1" id="analysis-status"><i class="fas fa-check-circle"></i> ข้อมูลอัปเดตเรียบร้อย</div>
+        </div>
+
+        <div class="input-group mb-3 shadow-sm">
+            <input type="text" id="search-input" class="form-control" placeholder="ชื่อสถานี หรือ โรงเรียน..." onkeyup="if(event.key==='Enter') searchLocation()">
+            <button class="btn btn-primary" onclick="searchLocation()"><i class="fas fa-search"></i></button>
+        </div>
+
+        <select id="filter-lu" class="form-select mb-4 shadow-sm" onchange="filterLandUse()">
+            <option value="all">แสดงผังเมืองทั้งหมด</option>
+            
+            <option value="A">ย่านเกษตรกรรม (เขียว)</option>
+            <option value="U">ย่านอาคารตัวเมือง (น้ำเงิน)</option>
+        </select>
+
+        <hr>
+
+        <div class="section-title text-muted small fw-bold mb-2">LAYERS CONTROL</div>
+
+        <div class="layer-card mb-2" style="border-left: 5px solid #00b894;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-street-view me-2" style="color: #00b894;"></i>ตำแหน่งของคุณ</div>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-outline-secondary me-2 border-0" onclick="simulateLocation()"><i class="fas fa-sync-alt"></i></button>
+                    <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="check-user-loc" checked></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layer-card mb-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-subway text-primary me-2"></i>สถานี MRT: <span id="count-stations" class="fw-bold">0</span></div>
+                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="check-line" checked></div>
+            </div>
+        </div>
+
+        <div class="layer-card mb-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-school text-danger me-2"></i>โรงเรียน: <span id="count-schools" class="fw-bold">0</span></div>
+                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="check-school" checked></div>
+            </div>
+        </div>
+
+        <div class="layer-card mb-2" style="border-left: 5px solid #ffff00;">
+            <div class="d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-map text-warning me-2"></i>ผังเมือง (Land Use)</span>
+                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="check-lu" checked></div>
+            </div>
+        </div>
+
+        <div class="layer-card mb-2" style="border-left: 5px dashed #4361ee;">
+            <div class="d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-circle-notch text-info me-2"></i>ระยะเดิน 800ม.</span>
+                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="check-buffer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
